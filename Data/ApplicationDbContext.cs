@@ -14,6 +14,8 @@ namespace EcommerceApp.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<Newsletter> Newsletters { get; set; }
+        public DbSet<Rating> Ratings { get; set; }
+        public DbSet<Wishlist> Wishlists { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -81,6 +83,16 @@ namespace EcommerceApp.Data
                 .HasOne(c => c.Product)
                 .WithMany()
                 .HasForeignKey(c => c.ProductId);
+
+            builder.Entity<Rating>()
+                .HasOne(r => r.Product)
+                .WithMany()
+                .HasForeignKey(r => r.ProductId);
+
+            builder.Entity<Wishlist>()
+                .HasOne(w => w.Product)
+                .WithMany()
+                .HasForeignKey(w => w.ProductId);
         }
     }
 }

@@ -202,6 +202,47 @@ namespace EcommerceApp.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Ratings",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UserId = table.Column<string>(nullable: true),
+                    ProductId = table.Column<int>(nullable: false),
+                    Score = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Ratings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Ratings_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Wishlists",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UserId = table.Column<string>(nullable: true),
+                    ProductId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Wishlists", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Wishlists_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "Products",
                 columns: new[] { "Id", "Description", "ImageUrl", "Name", "Price" },
@@ -278,6 +319,16 @@ namespace EcommerceApp.Migrations
                 name: "IX_Carts_ProductId",
                 table: "Carts",
                 column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Ratings_ProductId",
+                table: "Ratings",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Wishlists_ProductId",
+                table: "Wishlists",
+                column: "ProductId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -302,6 +353,12 @@ namespace EcommerceApp.Migrations
 
             migrationBuilder.DropTable(
                 name: "Newsletters");
+
+            migrationBuilder.DropTable(
+                name: "Ratings");
+
+            migrationBuilder.DropTable(
+                name: "Wishlists");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

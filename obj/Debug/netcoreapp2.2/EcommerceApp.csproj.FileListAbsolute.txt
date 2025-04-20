@@ -40,3 +40,6 @@ C:\Users\jaats\Desktop\EcommerceApp\obj\Debug\netcoreapp2.2\EcommerceApp.genrunt
 C:\Users\jaats\Desktop\EcommerceApp\obj\Debug\netcoreapp2.2\Ecommerc.7F121851.Up2Date
 C:\Users\jaats\Desktop\EcommerceApp\obj\Debug\netcoreapp2.2\Razor\Views\Products\Create.cshtml.g.cs
 C:\Users\jaats\Desktop\EcommerceApp\obj\Debug\netcoreapp2.2\Razor\Views\Cart\Index.cshtml.g.cs
+C:\Users\jaats\Desktop\EcommerceApp\obj\Debug\netcoreapp2.2\EcommerceApp.sourcelink.json
+C:\Users\jaats\Desktop\EcommerceApp\obj\Debug\netcoreapp2.2\Razor\Views\Products\QuickView.cshtml.g.cs
+C:\Users\jaats\Desktop\EcommerceApp\obj\Debug\netcoreapp2.2\Razor\Views\Wishlist\Index.cshtml.g.cs

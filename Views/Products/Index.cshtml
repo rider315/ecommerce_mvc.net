@@ -1,4 +1,4 @@
-@model IEnumerable<EcommerceApp.Models.Product>
+@model IEnumerable<EcommerceApp.Models.ProductViewModel>
 
 @{
     ViewData["Title"] = "Products";
@@ -13,12 +13,50 @@
     </p>
 }
 
+<!-- Search and Filter -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <form asp-action="Index" method="get" class="form-inline">
+            <div class="form-group mb-2 mr-2">
+                <input type="text" name="search" class="form-control" placeholder="Search products" value="@ViewBag.Search" />
+            </div>
+            <div class="form-group mb-2 mr-2">
+                <input type="number" name="minPrice" class="form-control" placeholder="Min Price" value="@ViewBag.MinPrice" step="0.01" />
+            </div>
+            <div class="form-group mb-2 mr-2">
+                <input type="number" name="maxPrice" class="form-control" placeholder="Max Price" value="@ViewBag.MaxPrice" step="0.01" />
+            </div>
+            <div class="form-group mb-2 mr-2">
+                <select name="sort" class="form-control">
+                    <option value="">Sort By</option>
+                    <option value="priceAsc" selected="@(ViewBag.Sort == "priceAsc")">Price: Low to High</option>
+                    <option value="priceDesc" selected="@(ViewBag.Sort == "priceDesc")">Price: High to Low</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary mb-2">Filter</button>
+        </form>
+    </div>
+</div>
+
+<!-- Alerts -->
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">@TempData["Message"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
 <style>
     .product-image {
         width: 100%;
         height: 200px;
         object-fit: cover;
         aspect-ratio: 4 / 3;
+    }
+    .star-rating {
+        color: #ffc107;
     }
 </style>
 
@@ -32,11 +70,41 @@
                     <h5 class="card-title">@product.Name</h5>
                     <p class="card-text">@product.Description</p>
                     <p class="card-text">$@product.Price</p>
+                    <p class="card-text star-rating">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            if (i <= product.AverageRating)
+                            {
+                                <span>★</span>
+                            }
+                            else
+                            {
+                                <span>☆</span>
+                            }
+                        }
+                        (@product.ReviewCount reviews)
+                    </p>
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <form asp-action="AddToCart" asp-controller="Products" method="post">
+                        <form asp-action="AddToCart" asp-controller="Products" method="post" class="d-inline">
                             <input type="hidden" name="productId" value="@product.Id" />
-                            <button type="submit" class="btn btn-success">Add to Cart</button>
+                            <button type="submit" class="btn btn-success btn-sm">Add to Cart</button>
+                        </form>
+                        <form asp-action="AddToWishlist" asp-controller="Products" method="post" class="d-inline">
+                            <input type="hidden" name="productId" value="@product.Id" />
+                            <button type="submit" class="btn btn-outline-primary btn-sm">Add to Wishlist</button>
+                        </form>
+                        <button class="btn btn-info btn-sm quick-view" data-id="@product.Id" data-toggle="modal" data-target="#quickViewModal">Quick View</button>
+                        <form asp-action="RateProduct" asp-controller="Products" method="post" class="mt-2">
+                            <input type="hidden" name="productId" value="@product.Id" />
+                            <select name="score" class="form-control d-inline" style="width: 100px;">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+                            <button type="submit" class="btn btn-primary btn-sm">Rate</button>
                         </form>
                     }
                 </div>
@@ -44,3 +112,35 @@
         </div>
     }
 </div>
+
+<!-- Quick View Modal -->
+<div class="modal fade" id="quickViewModal" tabindex="-1" role="dialog" aria-labelledby="quickViewModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="quickViewModalLabel">Product Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body" id="quickViewContent">
+                <!-- Content loaded via AJAX -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('.quick-view').click(function () {
+            var productId = $(this).data('id');
+            $.get('/Products/QuickView/' + productId, function (data) {
+                $('#quickViewContent').html(data);
+            });
+        });
+    });
+</script>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

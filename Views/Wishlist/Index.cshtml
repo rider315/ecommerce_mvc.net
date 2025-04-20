@@ -1,0 +1,48 @@
+@model IEnumerable<EcommerceApp.Models.Wishlist>
+
+@{
+    ViewData["Title"] = "Wishlist";
+}
+
+<h1>Your Wishlist</h1>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">@TempData["Message"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+@if (Model.Any())
+{
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="@item.Product.ImageUrl" class="card-img-top" style="height: 200px; object-fit: cover; aspect-ratio: 4/3;" alt="@item.Product.Name">
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Product.Name</h5>
+                        <p class="card-text">$@item.Product.Price</p>
+                        <form asp-action="AddToCart" asp-controller="Products" method="post" class="d-inline">
+                            <input type="hidden" name="productId" value="@item.Product.Id" />
+                            <button type="submit" class="btn btn-success btn-sm">Add to Cart</button>
+                        </form>
+                        <form asp-action="Remove" asp-controller="Wishlist" method="post" class="d-inline">
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p>Your wishlist is empty.</p>
+}
+
+<a asp-controller="Products" asp-action="Index" class="btn btn-secondary">Continue Shopping</a>

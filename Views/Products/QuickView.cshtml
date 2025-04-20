@@ -1,0 +1,23 @@
+@model EcommerceApp.Models.Product
+
+<div class="row">
+    <div class="col-md-6">
+        <img src="@Model.ImageUrl" class="img-fluid" style="height: 200px; object-fit: cover; aspect-ratio: 4/3;" alt="@Model.Name">
+    </div>
+    <div class="col-md-6">
+        <h4>@Model.Name</h4>
+        <p>@Model.Description</p>
+        <p><strong>$@Model.Price</strong></p>
+        @if (User.Identity.IsAuthenticated)
+        {
+            <form asp-action="AddToCart" asp-controller="Products" method="post" class="d-inline">
+                <input type="hidden" name="productId" value="@Model.Id" />
+                <button type="submit" class="btn btn-success btn-sm">Add to Cart</button>
+            </form>
+            <form asp-action="AddToWishlist" asp-controller="Products" method="post" class="d-inline">
+                <input type="hidden" name="productId" value="@Model.Id" />
+                <button type="submit" class="btn btn-outline-primary btn-sm">Add to Wishlist</button>
+            </form>
+        }
+    </div>
+</div>

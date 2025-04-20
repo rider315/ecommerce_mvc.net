@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EcommerceApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250420171134_InitialCreate")]
+    [Migration("20250420175341_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -122,6 +122,40 @@ namespace EcommerceApp.Migrations
                             Name = "Gaming Console",
                             Price = 499.99m
                         });
+                });
+
+            modelBuilder.Entity("EcommerceApp.Models.Rating", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("ProductId");
+
+                    b.Property<int>("Score");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Ratings");
+                });
+
+            modelBuilder.Entity("EcommerceApp.Models.Wishlist", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("ProductId");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Wishlists");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -282,6 +316,22 @@ namespace EcommerceApp.Migrations
                 });
 
             modelBuilder.Entity("EcommerceApp.Models.Cart", b =>
+                {
+                    b.HasOne("EcommerceApp.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("EcommerceApp.Models.Rating", b =>
+                {
+                    b.HasOne("EcommerceApp.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("EcommerceApp.Models.Wishlist", b =>
                 {
                     b.HasOne("EcommerceApp.Models.Product", "Product")
                         .WithMany()
